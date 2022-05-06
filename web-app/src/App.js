@@ -1,19 +1,33 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import {fetchHelloWworld} from './services/HelloWorldService';
 
-function App() {
-  const [label, setlabel] = useState("");
-  const clickHandler = async () => {
+export class App extends React.Component{
+  constructor(){
+    super();
+    this.state = {
+      currentTime: Date.now()
+    }
+    setInterval(()=> {
+      this.setState({
+        currentTime: Date.now()
+      });
+    },1000)
+  }
+  async clickHandler(){
     const result = await fetchHelloWworld();
-    setlabel(result);
-  };
-  return (
-    <div className="App">
-      <button onClick={()=> clickHandler()}>Call API</button>
-      {label}
-      </div>
-  );
-}
-
+    this.setState({
+      label: result
+    });
+  }
+  render(){
+    return (
+      <div className="App">
+        {new Date(this.state.currentTime).toLocaleDateString()}
+        <button onClick={()=> this.clickHandler()}>Call API</button>
+        {this.state.label}
+        </div>
+    );
+  }
+}  
 export default App;
